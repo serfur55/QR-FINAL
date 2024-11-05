@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -32,6 +33,19 @@ type CartItem = MenuItem & {
   customerName: string
 }
 
+type Order = {
+  id: string
+  tableNumber: string
+  customerName: string
+  items: {
+    name: string
+    quantity: number
+    note: string
+  }[]
+  status: 'pending' | 'preparing' | 'delivered' | 'paid'
+  timestamp: Date | string
+}
+
 const menuItems: MenuItem[] = [
   { id: 1, name: "Margherita Pizza", price: 8.99, description: "Klassische Pizza mit Tomaten und Mozzarella" },
   { id: 2, name: "Spaghetti Carbonara", price: 10.99, description: "Cremige Pasta mit Speck und Ei" },
@@ -43,6 +57,7 @@ export default function Component() {
   const [customerName, setCustomerName] = useState("")
   const [tableNumber, setTableNumber] = useState("")
   const [error, setError] = useState("") // Zustand für Fehlermeldung
+  const [latestOrders, setLatestOrders] = useState<Order[]>([]) // Zustand für die Liste der letzten Bestellungen
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -51,6 +66,46 @@ export default function Component() {
       setTableNumber(table)
     }
   }, [searchParams])
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const orders = await pb.collection('orders').getFullList<Order>({
+          sort: '-timestamp',
+        });
+        setLatestOrders(orders);
+  
+        // WebSocket-Abonnements für jede Bestellung einrichten
+        orders.forEach(order => {
+          pb.collection('orders').subscribe(order.id, (e) => {
+            if (e.action === 'update') {
+              setLatestOrders((prevOrders) =>
+                prevOrders.map((prevOrder) =>
+                  prevOrder.id === e.record.id ? (e.record as Order) : prevOrder
+                )
+              );
+            } else if (e.action === 'delete') {
+              setLatestOrders((prevOrders) =>
+                prevOrders.filter((prevOrder) => prevOrder.id !== e.record.id)
+              );
+            }
+          });
+        });
+      } catch (error) {
+        console.error("Fehler beim Abrufen der Bestellungen:", error);
+      }
+    };
+  
+    fetchOrders();
+  
+    return () => {
+      // Entferne Abonnements bei Komponentendemontage
+      latestOrders.forEach(order => {
+        pb.collection('orders').unsubscribe(order.id);
+      });
+    };
+  }, []);
+  
 
   const addToCart = (item: MenuItem) => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id && cartItem.customerName === customerName)
@@ -118,10 +173,12 @@ export default function Component() {
           note: item.note,
         })),
         totalPrice,
+        status: 'pending',
         timestamp: new Date().toISOString(),
       };
 
-      await pb.collection('orders').create(orderData);
+      const newOrder = await pb.collection('orders').create(orderData);
+      setLatestOrders(prevOrders => [newOrder, ...prevOrders]); // Füge die neue Bestellung zur Liste hinzu
 
       toast({
         title: "Bestellung erfolgreich",
@@ -130,7 +187,7 @@ export default function Component() {
 
       setCart([]);
       setCustomerName("");
-      setError(""); // Fehlernachricht zurücksetzen
+      setError("");
     } catch (error) {
       toast({
         title: "Fehler",
@@ -185,12 +242,7 @@ export default function Component() {
                   }}
                   placeholder="Geben Sie Ihren Namen ein"
                 />
-                {error && (
-  <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-    {error}
-  </p>
-)}
-
+                {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
               </div>
               {cart.map(item => (
                 <div key={`${item.id}-${item.customerName}`} className="border-b pb-4">
@@ -235,6 +287,46 @@ export default function Component() {
           </CardFooter>
         </Card>
       </div>
+
+      {/* Box für die Liste der letzten Bestellungen */}
+      {latestOrders.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-lg font-bold mb-2">Ihre letzten Bestellungen</h3>
+    {latestOrders.map((order) => (
+      <div key={order.id} className="mb-4 border p-4 rounded">
+        <div className="flex items-center space-x-2">
+          <p className="text-gray-600">Bestellstatus:</p>
+          <Badge variant={
+            order.status === 'pending' ? 'default' :
+            order.status === 'preparing' ? 'secondary' :
+            order.status === 'delivered' ? 'primary' : 'accent'
+          }>
+            {order.status}
+          </Badge>
+        </div>
+        <p className="text-gray-600">Kundenname: {order.customerName}</p>
+        <table className="w-full mt-2 border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-2 border-b">Gericht</th>
+              <th className="px-4 py-2 border-b">Menge</th>
+              <th className="px-4 py-2 border-b">Notiz</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.items.map((item, index) => (
+              <tr key={index} className="border-t">
+                <td className="px-4 py-2">{item.name}</td>
+                <td className="px-4 py-2 text-center">{item.quantity}</td>
+                <td className="px-4 py-2">{item.note || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ))}
+  </div>
+)}
     </div>
   )
 }

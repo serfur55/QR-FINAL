@@ -31,7 +31,7 @@ type Order = {
     quantity: number
     note: string
   }[]
-  status: 'pending' | 'preparing' | 'delivered' | 'paid'
+  status: 'pending' | 'preparing' | 'ready' | 'delivered' | 'paid'
   timestamp: Date | string
 }
 
@@ -62,7 +62,6 @@ export default function KuechenSeite() {
       fetchOrders() // Bestellungen neu abrufen bei jeder Änderung
     });
 
-    // Cleanup der WebSocket-Verbindung beim Entladen der Komponente
     return () => {
       unsubscribe()
     }
@@ -124,32 +123,32 @@ export default function KuechenSeite() {
               <Badge variant={
                 order.status === 'pending' ? 'default' :
                 order.status === 'preparing' ? 'secondary' :
-                order.status === 'delivered' ? 'primary' : 'accent'
+                order.status === 'ready' ? 'primary' :
+                order.status === 'delivered' ? 'success' : 'accent'
               }>
                 {order.status}
               </Badge>
               <div className="space-x-2">
-                <Button 
-                  variant={order.status === 'pending' ? "primary" : "outline"} 
-                  onClick={() => updateOrderStatus(order.id, 'pending')}
-                  disabled={order.status === 'pending'}
-                >
-                  Zubereitung starten
-                </Button>
-                <Button 
-                  variant={order.status === 'preparing' ? "primary" : "outline"} 
-                  onClick={() => updateOrderStatus(order.id, 'preparing')}
-                  disabled={order.status === 'preparing'}
-                >
-                  An Tisch gebracht
-                </Button>
-                <Button 
-                  variant={order.status === 'delivered' ? "primary" : "outline"} 
-                  onClick={() => updateOrderStatus(order.id, 'delivered')}
-                  disabled={order.status === 'delivered'}
-                >
-                  Als bezahlt markieren
-                </Button>
+                {order.status === 'pending' && (
+                  <Button onClick={() => updateOrderStatus(order.id, 'preparing')}>
+                    Zubereitung starten
+                  </Button>
+                )}
+                {order.status === 'preparing' && (
+                  <Button onClick={() => updateOrderStatus(order.id, 'ready')}>
+                    Bestellung fertig
+                  </Button>
+                )}
+                {order.status === 'ready' && (
+                  <Button onClick={() => updateOrderStatus(order.id, 'delivered')}>
+                    An Tisch gebracht
+                  </Button>
+                )}
+                {order.status === 'delivered' && (
+                  <Button onClick={() => updateOrderStatus(order.id, 'paid')}>
+                    Als bezahlt markieren
+                  </Button>
+                )}
                 <Button variant="destructive" onClick={() => deleteOrder(order.id)}>
                   Löschen
                 </Button>

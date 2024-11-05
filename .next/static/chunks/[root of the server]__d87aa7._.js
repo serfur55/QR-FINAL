@@ -976,7 +976,6 @@ function KuechenSeite() {
             fetchOrders() // Bestellungen neu abrufen bei jeder Änderung
             ;
         });
-        // Cleanup der WebSocket-Verbindung beim Entladen der Komponente
         return ()=>{
             unsubscribe();
         };
@@ -1010,7 +1009,7 @@ function KuechenSeite() {
                 children: "Küchenseite - Bestellübersicht"
             }, void 0, false, {
                 fileName: "[project]/pages/kuechenseite.tsx",
-                lineNumber: 93,
+                lineNumber: 92,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1028,7 +1027,7 @@ function KuechenSeite() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 97,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -1040,13 +1039,13 @@ function KuechenSeite() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                        lineNumber: 99,
+                                        lineNumber: 98,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                lineNumber: 97,
+                                lineNumber: 96,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1059,32 +1058,32 @@ function KuechenSeite() {
                                                         children: "Gericht"
                                                     }, void 0, false, {
                                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                                        lineNumber: 107,
+                                                        lineNumber: 106,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Menge"
                                                     }, void 0, false, {
                                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                                        lineNumber: 108,
+                                                        lineNumber: 107,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["TableHead"], {
                                                         children: "Notiz"
                                                     }, void 0, false, {
                                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                                        lineNumber: 109,
+                                                        lineNumber: 108,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                                lineNumber: 106,
+                                                lineNumber: 105,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/pages/kuechenseite.tsx",
-                                            lineNumber: 105,
+                                            lineNumber: 104,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["TableBody"], {
@@ -1094,88 +1093,90 @@ function KuechenSeite() {
                                                             children: item.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/kuechenseite.tsx",
-                                                            lineNumber: 115,
+                                                            lineNumber: 114,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                             children: item.quantity
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/kuechenseite.tsx",
-                                                            lineNumber: 116,
+                                                            lineNumber: 115,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$table$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["TableCell"], {
                                                             children: item.note || '-'
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/kuechenseite.tsx",
-                                                            lineNumber: 117,
+                                                            lineNumber: 116,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, index, true, {
                                                     fileName: "[project]/pages/kuechenseite.tsx",
-                                                    lineNumber: 114,
+                                                    lineNumber: 113,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/pages/kuechenseite.tsx",
-                                            lineNumber: 112,
+                                            lineNumber: 111,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/pages/kuechenseite.tsx",
-                                    lineNumber: 104,
+                                    lineNumber: 103,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                lineNumber: 103,
+                                lineNumber: 102,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardFooter"], {
                                 className: "flex justify-between items-center",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$badge$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Badge"], {
-                                        variant: order.status === 'pending' ? 'default' : order.status === 'preparing' ? 'secondary' : order.status === 'delivered' ? 'primary' : 'accent',
+                                        variant: order.status === 'pending' ? 'default' : order.status === 'preparing' ? 'secondary' : order.status === 'ready' ? 'primary' : order.status === 'delivered' ? 'success' : 'accent',
                                         children: order.status
                                     }, void 0, false, {
                                         fileName: "[project]/pages/kuechenseite.tsx",
-                                        lineNumber: 124,
+                                        lineNumber: 123,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "space-x-2",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
-                                                variant: order.status === 'pending' ? "primary" : "outline",
-                                                onClick: ()=>updateOrderStatus(order.id, 'pending'),
-                                                disabled: order.status === 'pending',
+                                            order.status === 'pending' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                onClick: ()=>updateOrderStatus(order.id, 'preparing'),
                                                 children: "Zubereitung starten"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                                lineNumber: 132,
-                                                columnNumber: 17
+                                                lineNumber: 133,
+                                                columnNumber: 19
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
-                                                variant: order.status === 'preparing' ? "primary" : "outline",
-                                                onClick: ()=>updateOrderStatus(order.id, 'preparing'),
-                                                disabled: order.status === 'preparing',
+                                            order.status === 'preparing' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                onClick: ()=>updateOrderStatus(order.id, 'ready'),
+                                                children: "Bestellung fertig"
+                                            }, void 0, false, {
+                                                fileName: "[project]/pages/kuechenseite.tsx",
+                                                lineNumber: 138,
+                                                columnNumber: 19
+                                            }, this),
+                                            order.status === 'ready' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                onClick: ()=>updateOrderStatus(order.id, 'delivered'),
                                                 children: "An Tisch gebracht"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                                lineNumber: 139,
-                                                columnNumber: 17
+                                                lineNumber: 143,
+                                                columnNumber: 19
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
-                                                variant: order.status === 'delivered' ? "primary" : "outline",
-                                                onClick: ()=>updateOrderStatus(order.id, 'delivered'),
-                                                disabled: order.status === 'delivered',
+                                            order.status === 'delivered' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                onClick: ()=>updateOrderStatus(order.id, 'paid'),
                                                 children: "Als bezahlt markieren"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                                lineNumber: 146,
-                                                columnNumber: 17
+                                                lineNumber: 148,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
                                                 variant: "destructive",
@@ -1183,7 +1184,7 @@ function KuechenSeite() {
                                                 children: "Löschen"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                                lineNumber: 153,
+                                                lineNumber: 152,
                                                 columnNumber: 17
                                             }, this)
                                         ]
@@ -1195,24 +1196,24 @@ function KuechenSeite() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/pages/kuechenseite.tsx",
-                                lineNumber: 123,
+                                lineNumber: 122,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, order.id, true, {
                         fileName: "[project]/pages/kuechenseite.tsx",
-                        lineNumber: 96,
+                        lineNumber: 95,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/pages/kuechenseite.tsx",
-                lineNumber: 94,
+                lineNumber: 93,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/pages/kuechenseite.tsx",
-        lineNumber: 92,
+        lineNumber: 91,
         columnNumber: 5
     }, this);
 }
