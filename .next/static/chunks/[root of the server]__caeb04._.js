@@ -1071,6 +1071,8 @@ function Component() {
     const [cart, setCart] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [customerName, setCustomerName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [tableNumber, setTableNumber] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useState"])("") // Zustand für Fehlermeldung
+    ;
     const searchParams = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useSearchParams"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$index$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const table = searchParams.get('table');
@@ -1129,16 +1131,11 @@ function Component() {
             });
             return;
         }
-        if (!customerName || !tableNumber) {
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$client$5d$__$28$ecmascript$29$__["toast"])({
-                title: "Fehler",
-                description: "Bitte geben Sie Ihren Namen ein.",
-                variant: "destructive"
-            });
+        if (!customerName) {
+            setError("Bitte geben Sie einen Namen ein, um eine Bestellung aufzugeben.");
             return;
         }
         try {
-            // Erstelle ein Bestellobjekt mit Zeitstempel
             const orderData = {
                 customerName,
                 tableNumber,
@@ -1152,15 +1149,14 @@ function Component() {
                 totalPrice,
                 timestamp: new Date().toISOString()
             };
-            // Speichern in Pocketbase
             await pb.collection('orders').create(orderData);
-            // Erfolgsmeldung
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$client$5d$__$28$ecmascript$29$__["toast"])({
                 title: "Bestellung erfolgreich",
                 description: `Vielen Dank für Ihre Bestellung, ${customerName}! Ihre Bestellung wird an Tisch ${tableNumber} geliefert.`
             });
-            // Warenkorb leeren
             setCart([]);
+            setCustomerName("");
+            setError(""); // Fehlernachricht zurücksetzen
         } catch (error) {
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$hooks$2f$use$2d$toast$2e$ts__$5b$client$5d$__$28$ecmascript$29$__["toast"])({
                 title: "Fehler",
@@ -1181,7 +1177,7 @@ function Component() {
                 ]
             }, void 0, true, {
                 fileName: "[project]/pages/bestellsystem.tsx",
-                lineNumber: 151,
+                lineNumber: 146,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1195,20 +1191,20 @@ function Component() {
                                         children: "Menü"
                                     }, void 0, false, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 155,
+                                        lineNumber: 150,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                         children: "Wählen Sie Ihre Gerichte aus"
                                     }, void 0, false, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 156,
+                                        lineNumber: 151,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                lineNumber: 154,
+                                lineNumber: 149,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1224,7 +1220,7 @@ function Component() {
                                                             children: item.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                                            lineNumber: 163,
+                                                            lineNumber: 158,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1232,7 +1228,7 @@ function Component() {
                                                             children: item.description
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                                            lineNumber: 164,
+                                                            lineNumber: 159,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1243,13 +1239,13 @@ function Component() {
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                                            lineNumber: 165,
+                                                            lineNumber: 160,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                                    lineNumber: 162,
+                                                    lineNumber: 157,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1259,36 +1255,36 @@ function Component() {
                                                             className: "mr-2 h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                                            lineNumber: 168,
+                                                            lineNumber: 163,
                                                             columnNumber: 21
                                                         }, this),
                                                         " Hinzufügen"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                                    lineNumber: 167,
+                                                    lineNumber: 162,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, item.id, true, {
                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                            lineNumber: 161,
+                                            lineNumber: 156,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                    lineNumber: 159,
+                                    lineNumber: 154,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                lineNumber: 158,
+                                lineNumber: 153,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/pages/bestellsystem.tsx",
-                        lineNumber: 153,
+                        lineNumber: 148,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1299,20 +1295,20 @@ function Component() {
                                         children: "Warenkorb"
                                     }, void 0, false, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 177,
+                                        lineNumber: 172,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardDescription"], {
                                         children: "Ihre aktuelle Bestellung"
                                     }, void 0, false, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 178,
+                                        lineNumber: 173,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                lineNumber: 176,
+                                lineNumber: 171,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1326,23 +1322,39 @@ function Component() {
                                                     children: "Ihr Name"
                                                 }, void 0, false, {
                                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                                    lineNumber: 183,
+                                                    lineNumber: 178,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$input$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Input"], {
                                                     id: "customerName",
                                                     value: customerName,
-                                                    onChange: (e)=>setCustomerName(e.target.value),
+                                                    onChange: (e)=>{
+                                                        setCustomerName(e.target.value);
+                                                        setError("") // Fehlernachricht zurücksetzen, wenn der Benutzer zu tippen beginnt
+                                                        ;
+                                                    },
                                                     placeholder: "Geben Sie Ihren Namen ein"
                                                 }, void 0, false, {
                                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                                    lineNumber: 184,
+                                                    lineNumber: 179,
                                                     columnNumber: 17
+                                                }, this),
+                                                error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    style: {
+                                                        color: 'red',
+                                                        fontSize: '0.875rem',
+                                                        marginTop: '0.25rem'
+                                                    },
+                                                    children: error
+                                                }, void 0, false, {
+                                                    fileName: "[project]/pages/bestellsystem.tsx",
+                                                    lineNumber: 189,
+                                                    columnNumber: 3
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/pages/bestellsystem.tsx",
-                                            lineNumber: 182,
+                                            lineNumber: 177,
                                             columnNumber: 15
                                         }, this),
                                         cart.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1356,7 +1368,7 @@ function Component() {
                                                                 children: item.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 194,
+                                                                lineNumber: 198,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1368,7 +1380,7 @@ function Component() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 196,
+                                                                        lineNumber: 200,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1376,19 +1388,19 @@ function Component() {
                                                                         children: "Entfernen"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 197,
+                                                                        lineNumber: 201,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 195,
+                                                                lineNumber: 199,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                        lineNumber: 193,
+                                                        lineNumber: 197,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1399,7 +1411,7 @@ function Component() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                        lineNumber: 200,
+                                                        lineNumber: 204,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1414,7 +1426,7 @@ function Component() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 203,
+                                                                        lineNumber: 207,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1422,13 +1434,13 @@ function Component() {
                                                                         children: "Menge verringern"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 204,
+                                                                        lineNumber: 208,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 202,
+                                                                lineNumber: 206,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1436,7 +1448,7 @@ function Component() {
                                                                 children: item.quantity
                                                             }, void 0, false, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 206,
+                                                                lineNumber: 210,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1448,7 +1460,7 @@ function Component() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 208,
+                                                                        lineNumber: 212,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1456,13 +1468,13 @@ function Component() {
                                                                         children: "Menge erhöhen"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                                        lineNumber: 209,
+                                                                        lineNumber: 213,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 207,
+                                                                lineNumber: 211,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1473,13 +1485,13 @@ function Component() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                                lineNumber: 211,
+                                                                lineNumber: 215,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                        lineNumber: 201,
+                                                        lineNumber: 205,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -1489,24 +1501,24 @@ function Component() {
                                                         className: "mt-2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                                        lineNumber: 213,
+                                                        lineNumber: 217,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, `${item.id}-${item.customerName}`, true, {
                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                lineNumber: 192,
+                                                lineNumber: 196,
                                                 columnNumber: 17
                                             }, this))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/pages/bestellsystem.tsx",
-                                    lineNumber: 181,
+                                    lineNumber: 176,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                lineNumber: 180,
+                                lineNumber: 175,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$card$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["CardFooter"], {
@@ -1520,7 +1532,7 @@ function Component() {
                                                 children: "Gesamtpreis:"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                lineNumber: 225,
+                                                lineNumber: 229,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1531,13 +1543,13 @@ function Component() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                lineNumber: 226,
+                                                lineNumber: 230,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 224,
+                                        lineNumber: 228,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ui$2f$button$2e$tsx__$5b$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1548,42 +1560,42 @@ function Component() {
                                                 className: "mr-2 h-4 w-4"
                                             }, void 0, false, {
                                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                                lineNumber: 229,
+                                                lineNumber: 233,
                                                 columnNumber: 15
                                             }, this),
                                             " Bestellung aufgeben"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/pages/bestellsystem.tsx",
-                                        lineNumber: 228,
+                                        lineNumber: 232,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/pages/bestellsystem.tsx",
-                                lineNumber: 223,
+                                lineNumber: 227,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/pages/bestellsystem.tsx",
-                        lineNumber: 175,
+                        lineNumber: 170,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/pages/bestellsystem.tsx",
-                lineNumber: 152,
+                lineNumber: 147,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/pages/bestellsystem.tsx",
-        lineNumber: 150,
+        lineNumber: 145,
         columnNumber: 5
     }, this);
 }
-_s(Component, "7NSJ62J0wGFwR4dPvrpz3+u5l0o=", false, function() {
+_s(Component, "gfqObpaRzRtNryYO5OYEurAQFJc=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$client$5d$__$28$ecmascript$29$__["useSearchParams"]
     ];

@@ -42,6 +42,7 @@ export default function Component() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [customerName, setCustomerName] = useState("")
   const [tableNumber, setTableNumber] = useState("")
+  const [error, setError] = useState("") // Zustand für Fehlermeldung
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -100,17 +101,12 @@ export default function Component() {
       });
       return;
     }
-    if (!customerName || !tableNumber) {
-      toast({
-        title: "Fehler",
-        description: "Bitte geben Sie Ihren Namen ein.",
-        variant: "destructive",
-      });
+    if (!customerName) {
+      setError("Bitte geben Sie einen Namen ein, um eine Bestellung aufzugeben.")
       return;
     }
-  
+
     try {
-      // Erstelle ein Bestellobjekt mit Zeitstempel
       const orderData = {
         customerName,
         tableNumber,
@@ -122,20 +118,19 @@ export default function Component() {
           note: item.note,
         })),
         totalPrice,
-        timestamp: new Date().toISOString(), // Zeitstempel hinzufügen
+        timestamp: new Date().toISOString(),
       };
-  
-      // Speichern in Pocketbase
+
       await pb.collection('orders').create(orderData);
-  
-      // Erfolgsmeldung
+
       toast({
         title: "Bestellung erfolgreich",
         description: `Vielen Dank für Ihre Bestellung, ${customerName}! Ihre Bestellung wird an Tisch ${tableNumber} geliefert.`,
       });
-  
-      // Warenkorb leeren
+
       setCart([]);
+      setCustomerName("");
+      setError(""); // Fehlernachricht zurücksetzen
     } catch (error) {
       toast({
         title: "Fehler",
@@ -184,9 +179,18 @@ export default function Component() {
                 <Input
                   id="customerName"
                   value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
+                  onChange={(e) => {
+                    setCustomerName(e.target.value)
+                    setError("") // Fehlernachricht zurücksetzen, wenn der Benutzer zu tippen beginnt
+                  }}
                   placeholder="Geben Sie Ihren Namen ein"
                 />
+                {error && (
+  <p style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+    {error}
+  </p>
+)}
+
               </div>
               {cart.map(item => (
                 <div key={`${item.id}-${item.customerName}`} className="border-b pb-4">
