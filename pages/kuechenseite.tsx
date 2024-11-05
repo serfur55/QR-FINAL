@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
-const pb = new PocketBase('http://127.0.0.1:8090') // Passe die URL des Pocketbase-Servers an
+const pb = new PocketBase('http://127.0.0.1:8090') // Passe die URL deines Pocketbase-Servers an
 
 type Order = {
   id: string
@@ -51,11 +51,21 @@ export default function KuechenSeite() {
         setOrders(formattedOrders)
       } catch (error) {
         console.error("Fehler beim Abrufen der Bestellungen:", error.message)
-        console.error("Details:", error)
       }
     }
 
-    fetchOrders()
+    fetchOrders() // Initiales Abrufen der Bestellungen
+
+    // WebSocket-Verbindung für Echtzeit-Updates aufbauen
+    const unsubscribe = pb.collection('orders').subscribe('*', (e) => {
+      console.log("Echtzeit-Update erhalten:", e)
+      fetchOrders() // Bestellungen neu abrufen bei jeder Änderung
+    });
+
+    // Cleanup der WebSocket-Verbindung beim Entladen der Komponente
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   const updateOrderStatus = async (orderId: string, newStatus: Order['status']) => {
