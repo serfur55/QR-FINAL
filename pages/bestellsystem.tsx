@@ -41,6 +41,7 @@ type Order = {
     name: string
     quantity: number
     note: string
+    price: number
   }[]
   status: 'pending' | 'preparing' | 'delivered' | 'paid'
   timestamp: Date | string
@@ -115,8 +116,32 @@ export default function Component() {
     };
   }, [searchParams]);
   
-  
-  
+  // Funktion zum Rufen des Kellners
+  const callWaiter = async () => {
+    if (!tableNumber) {
+      toast({
+        title: "Fehler",
+        description: "Die Tischnummer fehlt. Bitte laden Sie die Seite neu.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      await pb.collection('waiter_calls').create({ tableNumber });
+      toast({
+        title: "Kellner gerufen",
+        description: `Ein Kellner wurde für Tisch ${tableNumber} gerufen.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Es gab ein Problem beim Rufen des Kellners. Bitte versuchen Sie es erneut.",
+        variant: "destructive",
+      });
+      console.error("Kellner-Ruf Fehler:", error);
+    }
+  };
 
   const addToCart = (item: MenuItem) => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id && cartItem.customerName === customerName)
@@ -293,60 +318,62 @@ export default function Component() {
             <Button onClick={placeOrder} className="w-full">
               <ShoppingCart className="mr-2 h-4 w-4" /> Bestellung aufgeben
             </Button>
+            <Button onClick={callWaiter} className="w-full mt-2 bg-yellow-500 text-white">
+              🛎️ Kellner Rufen
+            </Button>
           </CardFooter>
         </Card>
       </div>
 
       {/* Box für die Liste der letzten Bestellungen */}
       {latestOrders.length > 0 && (
-  <div className="mt-6">
-    <h3 className="text-lg font-bold mb-2">Ihre letzten Bestellungen</h3>
-    {latestOrders.map((order) => {
-      const calculatedTotalPrice = order.items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      ); // Berechne den Gesamtpreis der Bestellung
-      
-      return (
-        <div key={order.id} className="mb-4 border p-4 rounded">
-          <div className="flex items-center space-x-2">
-            <p className="text-gray-600">Bestellstatus:</p>
-            <Badge variant={
-              order.status === 'pending' ? 'default' :
-              order.status === 'preparing' ? 'secondary' :
-              order.status === 'delivered' ? 'primary' : 'accent'
-            }>
-              {order.status}
-            </Badge>
-          </div>
-          <p className="text-gray-600">Kundenname: {order.customerName}</p>
-          <table className="w-full mt-2 border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2 border-b">Gericht</th>
-                <th className="px-4 py-2 border-b">Preis</th>
-                <th className="px-4 py-2 border-b">Menge</th>
-                <th className="px-4 py-2 border-b">Notiz</th>
-              </tr>
-            </thead>
-            <tbody>
-              {order.items.map((item, index) => (
-                <tr key={index} className="border-t">
-                  <td className="px-4 py-2">{item.name}</td>
-                  <td className="px-4 py-2 text-center">{item.price.toFixed(2)} €</td>
-                  <td className="px-4 py-2 text-center">{item.quantity}</td>
-                  <td className="px-4 py-2">{item.note || '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-2 font-semibold">Gesamtpreis: {calculatedTotalPrice.toFixed(2)} €</p> {/* Dynamisch berechneter Gesamtpreis */}
+        <div className="mt-6">
+          <h3 className="text-lg font-bold mb-2">Ihre letzten Bestellungen</h3>
+          {latestOrders.map((order) => {
+            const calculatedTotalPrice = order.items.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ); // Berechnung des Gesamtpreises
+            
+            return (
+              <div key={order.id} className="mb-4 border p-4 rounded">
+                <div className="flex items-center space-x-2">
+                  <p className="text-gray-600">Bestellstatus:</p>
+                  <Badge variant={
+                    order.status === 'pending' ? 'default' :
+                    order.status === 'preparing' ? 'secondary' :
+                    order.status === 'delivered' ? 'primary' : 'accent'
+                  }>
+                    {order.status}
+                  </Badge>
+                </div>
+                <p className="text-gray-600">Kundenname: {order.customerName}</p>
+                <table className="w-full mt-2 border border-gray-200">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="px-4 py-2 border-b">Gericht</th>
+                      <th className="px-4 py-2 border-b">Preis</th>
+                      <th className="px-4 py-2 border-b">Menge</th>
+                      <th className="px-4 py-2 border-b">Notiz</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {order.items.map((item, index) => (
+                      <tr key={index} className="border-t">
+                        <td className="px-4 py-2">{item.name}</td>
+                        <td className="px-4 py-2 text-center">{item.price.toFixed(2)} €</td>
+                        <td className="px-4 py-2 text-center">{item.quantity}</td>
+                        <td className="px-4 py-2">{item.note || '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="mt-2 font-semibold">Gesamtpreis: {calculatedTotalPrice.toFixed(2)} €</p>
+              </div>
+            );
+          })}
         </div>
-      );
-    })}
-  </div>
-)}
-
+      )}
     </div>
   )
 }

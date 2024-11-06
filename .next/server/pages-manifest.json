@@ -2,5 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/kuechenseite": "pages/kuechenseite.js",
-  "/bestellsystem": "pages/bestellsystem.js"
+  "/bestellsystem": "pages/bestellsystem.js",
+  "/_error": "pages/_error.js"
 }
