@@ -148,19 +148,17 @@ export default function Component() {
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const placeOrder = async () => {
+    // Überprüfen, ob der Warenkorb leer ist
     if (cart.length === 0) {
-      toast({
-        title: "Fehler",
-        description: "Ihr Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie bestellen.",
-        variant: "destructive",
-      });
+      setError("Ihr Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie bestellen.");
       return;
     }
+    // Überprüfen, ob der Name fehlt
     if (!customerName) {
-      setError("Bitte geben Sie einen Namen ein, um eine Bestellung aufzugeben.")
+      setError("Bitte geben Sie einen Namen ein, um eine Bestellung aufzugeben.");
       return;
     }
-
+    
     try {
       const orderData = {
         customerName,
@@ -176,18 +174,18 @@ export default function Component() {
         status: 'pending',
         timestamp: new Date().toISOString(),
       };
-
+  
       const newOrder = await pb.collection('orders').create(orderData);
       setLatestOrders(prevOrders => [newOrder, ...prevOrders]); // Füge die neue Bestellung zur Liste hinzu
-
+  
       toast({
         title: "Bestellung erfolgreich",
         description: `Vielen Dank für Ihre Bestellung, ${customerName}! Ihre Bestellung wird an Tisch ${tableNumber} geliefert.`,
       });
-
+  
       setCart([]);
       setCustomerName("");
-      setError("");
+      setError(""); // Fehlernachricht zurücksetzen
     } catch (error) {
       toast({
         title: "Fehler",
