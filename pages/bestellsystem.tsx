@@ -70,12 +70,21 @@ export default function Component() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        const table = searchParams.get('table');
+        
+        if (!table) {
+          console.error("Keine Tischnummer in der URL angegeben.");
+          return;
+        }
+  
         const orders = await pb.collection('orders').getFullList<Order>({
           sort: '-timestamp',
+          filter: `tableNumber="${table}"`, // Filter für den aktuellen Tisch
         });
+  
         setLatestOrders(orders);
   
-        // WebSocket-Abonnements für jede Bestellung einrichten
+        // WebSocket-Abonnements für Echtzeit-Updates
         orders.forEach(order => {
           pb.collection('orders').subscribe(order.id, (e) => {
             if (e.action === 'update') {
@@ -99,12 +108,14 @@ export default function Component() {
     fetchOrders();
   
     return () => {
-      // Entferne Abonnements bei Komponentendemontage
+      // Entferne Abonnements beim Entladen der Komponente
       latestOrders.forEach(order => {
         pb.collection('orders').unsubscribe(order.id);
       });
     };
-  }, []);
+  }, [searchParams]);
+  
+  
   
 
   const addToCart = (item: MenuItem) => {
