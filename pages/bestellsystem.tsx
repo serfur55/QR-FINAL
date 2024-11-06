@@ -292,41 +292,52 @@ export default function Component() {
       {latestOrders.length > 0 && (
   <div className="mt-6">
     <h3 className="text-lg font-bold mb-2">Ihre letzten Bestellungen</h3>
-    {latestOrders.map((order) => (
-      <div key={order.id} className="mb-4 border p-4 rounded">
-        <div className="flex items-center space-x-2">
-          <p className="text-gray-600">Bestellstatus:</p>
-          <Badge variant={
-            order.status === 'pending' ? 'default' :
-            order.status === 'preparing' ? 'secondary' :
-            order.status === 'delivered' ? 'primary' : 'accent'
-          }>
-            {order.status}
-          </Badge>
-        </div>
-        <p className="text-gray-600">Kundenname: {order.customerName}</p>
-        <table className="w-full mt-2 border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 border-b">Gericht</th>
-              <th className="px-4 py-2 border-b">Menge</th>
-              <th className="px-4 py-2 border-b">Notiz</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.items.map((item, index) => (
-              <tr key={index} className="border-t">
-                <td className="px-4 py-2">{item.name}</td>
-                <td className="px-4 py-2 text-center">{item.quantity}</td>
-                <td className="px-4 py-2">{item.note || '-'}</td>
+    {latestOrders.map((order) => {
+      const calculatedTotalPrice = order.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      ); // Berechne den Gesamtpreis der Bestellung
+      
+      return (
+        <div key={order.id} className="mb-4 border p-4 rounded">
+          <div className="flex items-center space-x-2">
+            <p className="text-gray-600">Bestellstatus:</p>
+            <Badge variant={
+              order.status === 'pending' ? 'default' :
+              order.status === 'preparing' ? 'secondary' :
+              order.status === 'delivered' ? 'primary' : 'accent'
+            }>
+              {order.status}
+            </Badge>
+          </div>
+          <p className="text-gray-600">Kundenname: {order.customerName}</p>
+          <table className="w-full mt-2 border border-gray-200">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-4 py-2 border-b">Gericht</th>
+                <th className="px-4 py-2 border-b">Preis</th>
+                <th className="px-4 py-2 border-b">Menge</th>
+                <th className="px-4 py-2 border-b">Notiz</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    ))}
+            </thead>
+            <tbody>
+              {order.items.map((item, index) => (
+                <tr key={index} className="border-t">
+                  <td className="px-4 py-2">{item.name}</td>
+                  <td className="px-4 py-2 text-center">{item.price.toFixed(2)} €</td>
+                  <td className="px-4 py-2 text-center">{item.quantity}</td>
+                  <td className="px-4 py-2">{item.note || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="mt-2 font-semibold">Gesamtpreis: {calculatedTotalPrice.toFixed(2)} €</p> {/* Dynamisch berechneter Gesamtpreis */}
+        </div>
+      );
+    })}
   </div>
 )}
+
     </div>
   )
 }
