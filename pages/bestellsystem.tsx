@@ -144,17 +144,29 @@ export default function Component() {
   };
 
   const addToCart = (item: MenuItem) => {
-    const existingItem = cart.find(cartItem => cartItem.id === item.id && cartItem.customerName === customerName)
+    // Überprüfen, ob der Artikel desselben Kunden bereits im Warenkorb existiert (nur anhand des Kundennamens)
+    const existingItem = cart.find(
+      (cartItem) => cartItem.name === item.name && cartItem.customerName === customerName
+    );
+  
     if (existingItem) {
-      setCart(cart.map(cartItem => 
-        cartItem.id === item.id && cartItem.customerName === customerName
-          ? { ...cartItem, quantity: cartItem.quantity + 1 }
-          : cartItem
-      ))
+      // Wenn der Artikel bereits existiert, aktualisieren wir nur die Menge
+      setCart(
+        cart.map((cartItem) =>
+          cartItem.name === item.name && cartItem.customerName === customerName
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        )
+      );
     } else {
-      setCart([...cart, { ...item, quantity: 1, note: "", customerName }])
+      // Wenn der Artikel noch nicht existiert, fügen wir ihn hinzu
+      setCart([
+        ...cart,
+        { ...item, quantity: 1, note: "", customerName },
+      ]);
     }
-  }
+  };
+  
 
   const removeFromCart = (item: CartItem) => {
     const newCart = cart.filter(cartItem => !(cartItem.id === item.id && cartItem.customerName === item.customerName))
@@ -184,44 +196,70 @@ export default function Component() {
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const placeOrder = async () => {
-    // Überprüfen, ob der Warenkorb leer ist
     if (cart.length === 0) {
       setError("Ihr Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie bestellen.");
       return;
     }
-    // Überprüfen, ob der Name fehlt
     if (!customerName) {
       setError("Bitte geben Sie einen Namen ein, um eine Bestellung aufzugeben.");
       return;
     }
-    
+  
     try {
-      const orderData = {
-        customerName,
-        tableNumber,
-        items: cart.map(item => ({
-          id: item.id,
+      // Prüfen, ob es bereits eine bestehende Bestellung mit "pending" Status für den Kunden gibt
+      const existingOrder = latestOrders.find(
+        (order) => order.customerName === customerName && order.status === 'pending'
+      );
+  
+      if (existingOrder) {
+        // Wenn es eine bestehende Bestellung gibt, fügen wir die neuen Artikel zur bestehenden Bestellung hinzu
+        const updatedItems = [...existingOrder.items, ...cart.map(item => ({
           name: item.name,
           price: item.price,
           quantity: item.quantity,
           note: item.note,
-        })),
-        totalPrice,
-        status: 'pending',
-        timestamp: new Date().toISOString(),
-      };
+        }))];
   
-      const newOrder = await pb.collection('orders').create(orderData);
-      setLatestOrders(prevOrders => [newOrder, ...prevOrders]); // Füge die neue Bestellung zur Liste hinzu
+        await pb.collection('orders').update(existingOrder.id, { items: updatedItems });
   
-      toast({
-        title: "Bestellung erfolgreich",
-        description: `Vielen Dank für Ihre Bestellung, ${customerName}! Ihre Bestellung wird an Tisch ${tableNumber} geliefert.`,
-      });
+        // Update die Bestellung lokal
+        setLatestOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === existingOrder.id ? { ...order, items: updatedItems } : order
+          )
+        );
+  
+        toast({
+          title: "Bestellung aktualisiert",
+          description: `Ihre Bestellung wurde erfolgreich aktualisiert, ${customerName}.`,
+        });
+      } else {
+        // Wenn keine bestehende Bestellung existiert, erstellen wir eine neue
+        const orderData = {
+          customerName,
+          tableNumber,
+          items: cart.map(item => ({
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            note: item.note,
+          })),
+          status: 'pending',
+          timestamp: new Date().toISOString(),
+        };
+  
+        const newOrder = await pb.collection('orders').create(orderData);
+        setLatestOrders(prevOrders => [newOrder, ...prevOrders]);
+  
+        toast({
+          title: "Bestellung erfolgreich",
+          description: `Vielen Dank für Ihre Bestellung, ${customerName}!`,
+        });
+      }
   
       setCart([]);
       setCustomerName("");
-      setError(""); // Fehlernachricht zurücksetzen
+      setError("");
     } catch (error) {
       toast({
         title: "Fehler",
@@ -231,6 +269,7 @@ export default function Component() {
       console.error("Bestellfehler:", error);
     }
   };
+  
 
   return (
     <div className="container mx-auto p-4">
