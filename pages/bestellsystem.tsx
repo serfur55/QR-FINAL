@@ -60,19 +60,19 @@ export default function Component() {
   const [error, setError] = useState("") // Zustand für Fehlermeldung
   const [latestOrders, setLatestOrders] = useState<Order[]>([]) // Zustand für die Liste der letzten Bestellungen
   const searchParams = useSearchParams()
-
+  
   useEffect(() => {
-    const table = searchParams.get('table')
+    const table = searchParams.get('table');
     if (table) {
-      setTableNumber(table)
+      setTableNumber(table);
     }
-  }, [searchParams])
-
+  }, [searchParams]);
+  
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const table = searchParams.get('table');
-        
+  
         if (!table) {
           console.error("Keine Tischnummer in der URL angegeben.");
           return;
@@ -80,41 +80,35 @@ export default function Component() {
   
         const orders = await pb.collection('orders').getFullList<Order>({
           sort: '-timestamp',
-          filter: `tableNumber="${table}"`, // Filter für den aktuellen Tisch
+          filter: `tableNumber="${table}"`,
         });
   
         setLatestOrders(orders);
-  
-        // WebSocket-Abonnements für Echtzeit-Updates
-        orders.forEach(order => {
-          pb.collection('orders').subscribe(order.id, (e) => {
-            if (e.action === 'update') {
-              setLatestOrders((prevOrders) =>
-                prevOrders.map((prevOrder) =>
-                  prevOrder.id === e.record.id ? (e.record as Order) : prevOrder
-                )
-              );
-            } else if (e.action === 'delete') {
-              setLatestOrders((prevOrders) =>
-                prevOrders.filter((prevOrder) => prevOrder.id !== e.record.id)
-              );
-            }
-          });
-        });
       } catch (error) {
         console.error("Fehler beim Abrufen der Bestellungen:", error);
       }
     };
   
+    // Initiales Laden der Bestellungen
     fetchOrders();
   
+    // WebSocket-Abonnement für Echtzeit-Updates auf die gesamte `orders`-Kollektion
+    const unsubscribe = pb.collection('orders').subscribe('*', (e) => {
+      if (e.action === 'update' || e.action === 'delete' || e.action === 'create') {
+        fetchOrders(); // Lade die Bestellungen bei jeder Änderung neu, um doppelte Einträge zu vermeiden
+      }
+    });
+  
+    // Cleanup-Funktion: Entferne das Abonnement beim Entladen der Komponente
     return () => {
-      // Entferne Abonnements beim Entladen der Komponente
-      latestOrders.forEach(order => {
-        pb.collection('orders').unsubscribe(order.id);
-      });
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
     };
   }, [searchParams]);
+  
+  
+  
   
   // Funktion zum Rufen des Kellners
   const callWaiter = async () => {
