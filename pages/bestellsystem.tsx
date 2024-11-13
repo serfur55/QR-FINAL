@@ -144,16 +144,18 @@ export default function Component() {
   };
 
   const addToCart = (item: MenuItem) => {
-    // Überprüfen, ob der Artikel desselben Kunden bereits im Warenkorb existiert (nur anhand des Kundennamens)
+    // Konvertiere den Kundennamen zu Kleinbuchstaben, um unabhängig von Groß-/Kleinschreibung zu vergleichen
+    const normalizedCustomerName = customerName.toLowerCase();
+    
     const existingItem = cart.find(
-      (cartItem) => cartItem.name === item.name && cartItem.customerName === customerName
+      (cartItem) => cartItem.name === item.name && cartItem.customerName.toLowerCase() === normalizedCustomerName
     );
   
     if (existingItem) {
       // Wenn der Artikel bereits existiert, aktualisieren wir nur die Menge
       setCart(
         cart.map((cartItem) =>
-          cartItem.name === item.name && cartItem.customerName === customerName
+          cartItem.name === item.name && cartItem.customerName.toLowerCase() === normalizedCustomerName
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         )
@@ -162,10 +164,11 @@ export default function Component() {
       // Wenn der Artikel noch nicht existiert, fügen wir ihn hinzu
       setCart([
         ...cart,
-        { ...item, quantity: 1, note: "", customerName },
+        { ...item, quantity: 1, note: "", customerName: customerName },
       ]);
     }
   };
+  
   
 
   const removeFromCart = (item: CartItem) => {
@@ -206,9 +209,12 @@ export default function Component() {
     }
   
     try {
-      // Prüfen, ob es bereits eine bestehende Bestellung mit "pending" Status für den Kunden gibt
+      // Konvertiere den Kundennamen zu Kleinbuchstaben
+      const normalizedCustomerName = customerName.toLowerCase();
+  
+      // Prüfen, ob es bereits eine bestehende Bestellung mit "pending" Status für den Kunden gibt (unabhängig von Groß-/Kleinschreibung)
       const existingOrder = latestOrders.find(
-        (order) => order.customerName === customerName && order.status === 'pending'
+        (order) => order.customerName.toLowerCase() === normalizedCustomerName && order.status === 'pending'
       );
   
       if (existingOrder) {
@@ -269,6 +275,7 @@ export default function Component() {
       console.error("Bestellfehler:", error);
     }
   };
+  
   
 
   return (
